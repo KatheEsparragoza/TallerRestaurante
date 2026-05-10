@@ -1,92 +1,176 @@
-const menu = [
-  { id: 1, nombre: "Burger", precio: 15000, img: "https://images.unsplash.com/photo-1550547660-d9450f859349" },
-  { id: 2, nombre: "Pan artesanal", precio: 20000, img: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=400&h=300&fit=crop" },
-  { id: 3, nombre: "Tacos", precio: 12000, img: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092" },
-  { id: 4, nombre: "Hot Dog", precio: 10000, img: "https://images.unsplash.com/photo-1550547660-d9450f859349" },
-  { id: 5, nombre: "Pasta", precio: 18000, img: "https://images.unsplash.com/photo-1525755662778-989d0524087e" },
-  { id: 6, nombre: "Café", precio: 5000, img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93" }
+// ===== DATA =====
+const productos = [
+  { id: 1, nombre: "Hamburguesa", precio: 15000, img: "https://images.unsplash.com/photo-1550547660-d9450f859349" },
+  { id: 2, nombre: "Pasta", precio: 18000, img: "https://images.unsplash.com/photo-1525755662778-989d0524087e" },
+  { id: 3, nombre: "Hot Dog", precio: 12000, img: "https://images.unsplash.com/photo-1550547660-d9450f859349" },
+  { id: 4, nombre: "Tacos", precio: 14000, img: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092" }
 ];
 
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let carrito = [];
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+let reservas = JSON.parse(localStorage.getItem("reservas")) || [];
 
-function renderMenu(lista = menu) {
-  const cont = document.getElementById("menu");
-  cont.innerHTML = "";
+// ===== SIDEBAR =====
+document.getElementById("toggleMenu").onclick = () => {
+  document.getElementById("sidebar").classList.toggle("collapsed");
+};
 
-  lista.forEach(item => {
-    cont.innerHTML += `
+// ===== NAVEGACIÓN =====
+document.querySelectorAll(".nav").forEach(nav => {
+  nav.addEventListener("click", () => {
+    document.querySelectorAll(".nav").forEach(n => n.classList.remove("active"));
+    nav.classList.add("active");
+
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    document.getElementById("view-" + nav.dataset.view).classList.remove("hidden");
+
+    document.getElementById("title").textContent = nav.textContent.trim();
+  });
+});
+
+// ===== RENDER MENU =====
+function renderMenu(id) {
+  const container = document.getElementById(id);
+  container.innerHTML = "";
+
+  productos.forEach(p => {
+    container.innerHTML += `
       <div class="card">
-        <img src="${item.img}">
-        <h3>${item.nombre}</h3>
-        <p>$${item.precio}</p>
-        <button onclick="agregar(${item.id})">Agregar</button>
+        <img src="${p.img}">
+        <div class="card-content">
+          <h4>${p.nombre}</h4>
+          <p>$${p.precio}</p>
+          <button onclick="agregarAlCarrito(${p.id}, this)">Agregar</button>
+        </div>
       </div>
     `;
   });
 }
 
-function agregar(id) {
-  const prod = menu.find(p => p.id === id);
-  const existe = carrito.find(p => p.id === id);
+renderMenu("menuGrid");
+renderMenu("menuGridPedidos");
 
-  if (existe) existe.cantidad++;
-  else carrito.push({ ...prod, cantidad: 1 });
+// ===== BUSCADOR =====
+document.getElementById("search").addEventListener("input", e => {
+  const val = e.target.value.toLowerCase();
+  const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(val));
+  const container = document.getElementById("menuGrid");
 
-  guardar();
+  container.innerHTML = "";
+  filtrados.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <div class="card-content">
+          <h4>${p.nombre}</h4>
+          <p>$${p.precio}</p>
+          <button onclick="agregarAlCarrito(${p.id}, this)">Agregar</button>
+        </div>
+      </div>
+    `;
+  });
+});
+
+// ===== TOAST =====
+function mostrarToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+
+  setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+// ===== CONTADOR =====
+function actualizarContador() {
+  document.getElementById("cartCount").textContent = carrito.length;
+}
+
+// ===== CARRITO =====
+function agregarAlCarrito(id, btn) {
+  const producto = productos.find(p => p.id === id);
+  carrito.push(producto);
+
   renderCarrito();
+  actualizarContador();
+
+  // 🔥 FEEDBACK BOTÓN
+  btn.textContent = "✔ Agregado";
+  setTimeout(() => btn.textContent = "Agregar", 1000);
+
+  // 🔥 TOAST
+  mostrarToast(producto.nombre + " agregado 🛒");
 }
 
 function renderCarrito() {
-  const cont = document.getElementById("cart-items");
-  cont.innerHTML = "";
+  const container = document.getElementById("cartItems");
+  container.innerHTML = "";
+
   let total = 0;
-
-  carrito.forEach(item => {
-    total += item.precio * item.cantidad;
-
-    cont.innerHTML += `
-      <div>
-        ${item.nombre} x${item.cantidad}
-        <button onclick="eliminar(${item.id})">❌</button>
-      </div>
-    `;
+  carrito.forEach(p => {
+    total += p.precio;
+    container.innerHTML += `<p>${p.nombre} - $${p.precio}</p>`;
   });
 
   document.getElementById("total").textContent = total;
 }
 
-function eliminar(id) {
-  carrito = carrito.filter(p => p.id !== id);
-  guardar();
-  renderCarrito();
-}
-
+// ===== CONFIRMAR =====
 function confirmarPedido() {
-  const nombre = document.getElementById("cliente").value;
-  const mesa = document.getElementById("mesa").value;
+  const cliente = document.getElementById("cliente").value;
 
-  if (!nombre || !mesa) {
-    alert("Completa los datos");
+  if (!cliente || carrito.length === 0) {
+    mostrarToast("Completa los datos ⚠️");
     return;
   }
 
-  alert("🔥 Pedido confirmado");
+  const total = carrito.reduce((s, p) => s + p.precio, 0);
+  pedidos.push({ cliente, total });
+
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+
   carrito = [];
-  guardar();
   renderCarrito();
+  actualizarContador();
+  actualizarReportes();
+
+  mostrarToast("Pedido confirmado 🚀");
 }
 
-function guardar() {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
+// ===== RESERVAS =====
+function crearReserva() {
+  const cliente = document.getElementById("rCliente").value;
+  const fecha = document.getElementById("rFecha").value;
+  const personas = document.getElementById("rPersonas").value;
+
+  reservas.push({ cliente, fecha, personas });
+  localStorage.setItem("reservas", JSON.stringify(reservas));
+
+  renderReservas();
+  mostrarToast("Reserva guardada 📅");
 }
 
-document.getElementById("search").addEventListener("input", e => {
-  const texto = e.target.value.toLowerCase();
-  const filtrados = menu.filter(p =>
-    p.nombre.toLowerCase().includes(texto)
-  );
-  renderMenu(filtrados);
-});
+function renderReservas() {
+  const container = document.getElementById("listaReservas");
+  container.innerHTML = "";
 
-renderMenu();
-renderCarrito();
+  reservas.forEach(r => {
+    container.innerHTML += `
+      <div class="card-box">
+        <p><b>${r.cliente}</b></p>
+        <p>${r.fecha}</p>
+        <p>${r.personas} personas</p>
+      </div>
+    `;
+  });
+}
+
+renderReservas();
+
+// ===== REPORTES =====
+function actualizarReportes() {
+  const total = pedidos.reduce((s, p) => s + p.total, 0);
+  document.getElementById("ventas").textContent = "$" + total;
+  document.getElementById("cantidadPedidos").textContent = pedidos.length;
+}
+
+actualizarReportes();
