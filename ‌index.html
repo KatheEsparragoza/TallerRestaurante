@@ -2,31 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Restaurante App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Street Food App</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header>
-  <h1>🍽️ Restaurante App</h1>
+  <h1>🔥 Street Food</h1>
+  <input type="text" id="search" placeholder="Buscar comida...">
 </header>
 
-<input type="text" id="search" placeholder="Buscar platos...">
+<div class="container">
 
-<div id="categories"></div>
+  <section id="menu"></section>
 
-<section id="menu"></section>
+  <aside class="cart">
+    <h2>🛒 Pedido</h2>
+    <div id="cart-items"></div>
+    <p>Total: $<span id="total">0</span></p>
 
-<aside id="cart">
-  <h2>🛒 Pedido</h2>
-  <ul id="cart-items"></ul>
-  <p>Total: $<span id="total">0</span></p>
+    <input type="text" id="cliente" placeholder="Nombre">
+    <input type="text" id="mesa" placeholder="Mesa o dirección">
 
-  <input type="text" id="cliente" placeholder="Nombre cliente">
-  <input type="text" id="mesa" placeholder="Mesa o dirección">
+    <button onclick="confirmarPedido()">Confirmar</button>
+  </aside>
 
-  <button onclick="confirmarPedido()">Confirmar Pedido</button>
-</aside>
+</div>
 
 <script src="script.js"></script>
 </body>
