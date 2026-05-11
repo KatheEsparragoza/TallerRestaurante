@@ -22,15 +22,15 @@ const DEFAULT_CATEGORIES = [
 ];
 
 const DEFAULT_PRODUCTS = [
-  { id: 1, nombre: 'Ceviche', descripcion: 'Ceviche fresco con limón y cilantro', precio: 12000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1555138380-58f2b7c36c4b?w=400&h=300&fit=crop' },
-  { id: 2, nombre: 'Nachos', descripcion: 'Nachos con queso derretido y guacamole', precio: 10000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1529973565457-a60a2ccf750d?w=400&h=300&fit=crop' },
-  { id: 3, nombre: 'Alitas BBQ', descripcion: 'Alitas de pollo bañadas en salsa BBQ', precio: 14000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1608039829572-9b18d7c1d1c6?w=400&h=300&fit=crop' },
+  { id: 1, nombre: 'Ceviche', descripcion: 'Ceviche fresco con limón y cilantro', precio: 12000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1615361200141-f45040f367be?w=400&h=300&fit=crop' },
+  { id: 2, nombre: 'Nachos', descripcion: 'Nachos con queso derretido y guacamole', precio: 10000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1669624272709-c5b91f66b1b7?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+  { id: 3, nombre: 'Alitas BBQ', descripcion: 'Alitas de pollo bañadas en salsa BBQ', precio: 14000, categoria: 1, imagen: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&h=300&fit=crop' },
   { id: 4, nombre: 'Hamburguesa', descripcion: 'Hamburguesa artesanal con queso y bacon', precio: 15000, categoria: 2, imagen: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop' },
   { id: 5, nombre: 'Pasta Alfredo', descripcion: 'Pasta cremosa con pollo y champiñones', precio: 18000, categoria: 2, imagen: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop' },
   { id: 6, nombre: 'Tacos', descripcion: 'Tacos de carne asada con guacamole', precio: 14000, categoria: 2, imagen: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop' },
   { id: 7, nombre: 'Pizza', descripcion: 'Pizza pepperoni con queso mozzarella', precio: 20000, categoria: 2, imagen: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop' },
   { id: 8, nombre: 'Salmón', descripcion: 'Salmón a la plancha con verduras', precio: 22000, categoria: 2, imagen: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop' },
-  { id: 9, nombre: 'Juego Natural', descripcion: 'Jugo de frutas frescas del día', precio: 5000, categoria: 3, imagen: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=300&fit=crop' },
+  { id: 9, nombre: 'Jugo Natural', descripcion: 'Jugo de frutas frescas del día', precio: 5000, categoria: 3, imagen: 'https://images.unsplash.com/photo-1657101455328-6821c90b0ad3?q=80&w=881&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
   { id: 10, nombre: 'Limonada', descripcion: 'Limonada natural con hierbabuena', precio: 4000, categoria: 3, imagen: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&h=300&fit=crop' },
   { id: 11, nombre: 'Cheesecake', descripcion: 'Cheesecake con fresas y crema', precio: 8000, categoria: 4, imagen: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&h=300&fit=crop' },
   { id: 12, nombre: 'Helado', descripcion: 'Helado artesanal de vainilla y chocolate', precio: 6000, categoria: 4, imagen: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop' }
