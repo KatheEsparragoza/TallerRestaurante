@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreetFood - Gestión Restaurante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ========== LOGIN ========== -->
+<section id="view-login" class="view active">
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="auth-logo"><i class="fa-solid fa-fire"></i> StreetFood</div>
+      <h2 id="auth-title">Iniciar Sesión</h2>
+
+      <div id="login-form">
+        <input type="email" id="login-email" placeholder="Correo electrónico" autocomplete="email">
+        <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password">
+        <button onclick="login()">Entrar</button>
+        <p class="auth-link">¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate</a></p>
+      </div>
+
+      <div id="register-form" class="hidden">
+        <input type="text" id="reg-nombre" placeholder="Nombre completo">
+        <select id="reg-rol">
+          <option value="cliente">Cliente</option>
+          <option value="mesero">Mesero</option>
+          <option value="admin">Administrador</option>
+        </select>
+        <input type="email" id="reg-email" placeholder="Correo electrónico">
+        <input type="password" id="reg-pass" placeholder="Contraseña">
+        <input type="password" id="reg-pass2" placeholder="Confirmar contraseña">
+        <button onclick="register()">Crear Cuenta</button>
+        <p class="auth-link">¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Inicia sesión</a></p>
+      </div>
+
+      <div class="auth-demo">
+        <p><strong>Demo:</strong></p>
+        <p>admin@streetfood.com / admin123</p>
+        <p>mesero@streetfood.com / mesero123</p>
+        <p>cliente@streetfood.com / cliente123</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== APP ========== -->
+<div id="app" class="hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-fire"></i> <span>StreetFood</span></div>
+    </div>
+    <nav id="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="nav" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="header">
+      <div class="header-left">
+        <button id="toggleSidebar" class="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="view-title">Menú</h1>
+      </div>
+      <div class="header-right" id="header-right">
+        <span id="user-badge" class="user-badge"></span>
+      </div>
+    </header>
+
+    <!-- MENU VIEW -->
+    <section id="view-menu" class="view active">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="fa fa-search"></i>
+          <input type="text" id="search-input" placeholder="Buscar plato..." oninput="renderMenu()">
+        </div>
+        <div class="filter-tabs" id="filter-tabs"></div>
+      </div>
+      <div class="menu-grid" id="menu-grid"></div>
+    </section>
+
+    <!-- NEW ORDER VIEW -->
+    <section id="view-pedido" class="view hidden">
+      <div class="order-layout">
+        <div class="order-menu">
+          <div class="toolbar compact">
+            <div class="search-box">
+              <i class="fa fa-search"></i>
+              <input type="text" id="order-search" placeholder="Buscar..." oninput="renderOrderMenu()">
+            </div>
+            <div class="filter-tabs" id="order-filter-tabs"></div>
+          </div>
+          <div class="menu-grid compact" id="order-menu-grid"></div>
+        </div>
+        <div class="cart-panel" id="cart-panel">
+          <div class="cart-header">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Pedido</h3>
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+          <div class="cart-items" id="cart-items"></div>
+          <div class="cart-total">
+            <span>Total:</span>
+            <span id="cart-total">$0</span>
+          </div>
+          <div class="cart-form">
+            <input type="text" id="order-cliente" placeholder="Nombre del cliente">
+            <input type="number" id="order-mesa" placeholder="No. Mesa">
+            <button class="btn-primary" onclick="confirmarPedido()">Confirmar Pedido</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDERS VIEW -->
+    <section id="view-ordenes" class="view hidden">
+      <div class="toolbar">
+        <h3>Mis Pedidos</h3>
+        <div class="filter-tabs" id="order-status-tabs">
+          <button class="filter-btn active" data-filter="all" onclick="filtrarPedidos('all')">Todas</button>
+          <button class="filter-btn" data-filter="pendiente" onclick="filtrarPedidos('pendiente')">Pendientes</button>
+          <button class="filter-btn" data-filter="preparando" onclick="filtrarPedidos('preparando')">Preparando</button>
+          <button class="filter-btn" data-filter="listo" onclick="filtrarPedidos('listo')">Listas</button>
+          <button class="filter-btn" data-filter="entregado" onclick="filtrarPedidos('entregado')">Entregadas</button>
+        </div>
+      </div>
+      <div class="orders-grid" id="orders-grid"></div>
+    </section>
+
+    <!-- RESERVAS VIEW -->
+    <section id="view-reservas" class="view hidden">
+      <div class="reservas-layout">
+        <div class="reservas-form">
+          <h3><i class="fa-solid fa-calendar-plus"></i> Nueva Reserva</h3>
+          <input type="text" id="res-cliente" placeholder="Nombre del cliente">
+          <input type="date" id="res-fecha">
+          <input type="time" id="res-hora">
+          <input type="number" id="res-personas" placeholder="Número de personas" min="1">
+          <button class="btn-primary" onclick="crearReserva()">Reservar</button>
+        </div>
+        <div class="reservas-list">
+          <h3><i class="fa-solid fa-calendar"></i> Mis Reservas</h3>
+          <div id="reservas-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN VIEW -->
+    <section id="view-admin" class="view hidden">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="showAdminTab('productos')">Platos</button>
+        <button class="admin-tab" onclick="showAdminTab('categorias')">Categorías</button>
+      </div>
+      <div id="admin-productos" class="admin-panel">
+        <div class="admin-header">
+          <h3>Gestión de Platos</h3>
+          <button class="btn-primary" onclick="showProductForm()">+ Nuevo Plato</button>
+        </div>
+        <div class="admin-table" id="admin-products-table"></div>
+      </div>
+      <div id="admin-categorias" class="admin-panel hidden">
+        <div class="admin-header">
+          <h3>Gestión de Categorías</h3>
+          <button class="btn-primary" onclick="showCategoryForm()">+ Nueva Categoría</button>
+        </div>
+        <div class="admin-table" id="admin-categories-table"></div>
+      </div>
+    </section>
+
+    <!-- REPORTS VIEW -->
+    <section id="view-reportes" class="view hidden">
+      <div class="reports-header">
+        <h3>Reportes de Ventas</h3>
+        <button class="btn-danger" onclick="cerrarCaja()"><i class="fa-solid fa-cash-register"></i> Cerrar Caja</button>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="reports-section">
+        <h4>Órdenes del Día</h4>
+        <div class="admin-table" id="reports-orders-table"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ========== MODALS ========== -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()"></div>
+<div id="modal" class="modal hidden">
+  <div class="modal-header">
+    <h3 id="modal-title">Título</h3>
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+  </div>
+  <div class="modal-body" id="modal-body"></div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
